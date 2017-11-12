@@ -52,8 +52,8 @@ class  methods
                                                             phone_i='".$phone."'");
         if ($q)
         {
-            return json_decode(array("registration"=>"success"));
+            return json_encode(array("registration"=>"success"));
         }else
-            return json_decode(array("registration"=>"failed"));
+            return json_encode(array("registration"=>"failed"));
     }
 }
