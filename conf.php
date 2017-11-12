@@ -1,11 +1,17 @@
 <?php
+ob_start();
 /**
  * Created by PhpStorm.
- * User: Mohammad Shawawhneh
- * Date: 11/10/2017
- * Time: 12:12 AM
+ * User: Mohammad Shawahneh
+ * Date: 11/12/2017
+ * Time: 8:04 PM
  */
-$con = mysqli("localhost","root","","techcamp");
+if ($ind!="yes")
+{
+    header("location: ./");
+    exit();
+}
+$con = mysqli_connect("localhost","root","","techcamp");
 
 if(mysqli_connect_errno())
 {
