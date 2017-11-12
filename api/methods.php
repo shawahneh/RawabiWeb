@@ -11,16 +11,20 @@ if ($ind!="yes")
     header("location: ./");
     exit();
 }
+include "User.php";
 class  methods
 {
+    //this method not for API it is used on the api methods inside php side
+    public static function checkAuth($username,$password)
+    {
+        $user = user::getAuth($username,$password);
+        return $user;
+    }
+    //these methods for API
     public static function userAuth($username,$password)
     {
-        global $con;
-        $username = mysqli_real_escape_string($con,$username);
-        $password = mysqli_real_escape_string($con,$password);
-        $q = mysqli_query($con,"select * from users where password = '".$password."' and username = '".$username."'");
-        $r = mysqli_fetch_array($q);
-        if (isset($r))
+
+        if (self::checkAuth($username,$password))
         {
             return json_encode(array("auth"=>"true"));
         }else
@@ -55,5 +59,26 @@ class  methods
             return json_encode(array("registration"=>"success"));
         }else
             return json_encode(array("registration"=>"failed"));
+    }
+    public static function getMyJourneys($username,$password){
+        $user = self::checkAuth($username,$password);
+        global $con;
+        if ($user)
+        {
+            $q = mysqli_query($con,"select * from journeys where userId='".$user->id."'");
+            $journeys = array();
+            while($r=mysqli_fetch_array($q))
+            {
+                //startLocation	endLocation	goingDate	seats	genderPrefer	carDescription
+                array_push($journeys,array("startLocation"=>$r["startLocation"],
+                                            "endLocation"=>$r["endLocation"],
+                                            "goingDate"=>$r["goingDate"],
+                                            "seats"=>$r["seats"],
+                                            "genderPrefer"=>$r["genderPrefer"],
+                                            "carDescription"=>$r["carDescription"]));
+            }
+            return json_encode(array("journeys"=>$journeys));
+        }else
+            return json_encode(array("auth"=>"false"));
     }
 }
