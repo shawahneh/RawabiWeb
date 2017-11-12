@@ -27,6 +27,6 @@ switch ($action)
         echo methods::userRegister($_POST["username"],$_POST["password"],$_POST["fname"],$_POST["lname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["userType"],$_POST["image"],$_POST["phone"]);
         break;
     case "myJourneys":
-        echo methods::getMyJourneys($username,$password);
+        echo methods::getMyJourneys($_POST["username"],$_POST["password"]);
         break;
 }
