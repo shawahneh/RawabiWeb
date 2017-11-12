@@ -42,14 +42,14 @@ class  methods
 
         $q = mysqli_query($con,"insert into users set username='".$username."',
                                                             password='".$password."',
-                                                            fname_s='".$fname."',
-                                                            lname_s='".$lname."',
-                                                            gender_b='".$gender."',
-                                                            birthdate_d='".$birthdate."',
-                                                            address_s='".$address."',
-                                                            userType_i='".$userType."',
-                                                            image_s='".$image."',
-                                                            phone_i='".$phone."'");
+                                                            fname='".$fname."',
+                                                            lname='".$lname."',
+                                                            gender='".$gender."',
+                                                            birthdate='".$birthdate."',
+                                                            address='".$address."',
+                                                            userType='".$userType."',
+                                                            image='".$image."',
+                                                            phone='".$phone."'");
         if ($q)
         {
             return json_encode(array("registration"=>"success"));
