@@ -39,6 +39,10 @@ switch ($action)
         echo methods::getRideDetails($_POST["username"],$_POST["password"],$_POST["rideId"]);
         break;
     case "setRideOnJourney":
+        // this method get the journeyId and meetingLocation on this method i checked if there is available seats
+        // if there is a seats available the output will be :  success
+        // if there is no seats available for the selected journey : noAvailableSeats
+        // if something went wrong it will be : fail
         echo  methods::setRideOnJourney($_POST["username"],$_POST["password"],$_POST["journeyId"],$_POST["meetingLocation"]);
         break;
 }
