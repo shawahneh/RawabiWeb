@@ -107,25 +107,27 @@ class  methods
         if ($user)
         {
             $q = mysqli_query($con,"select * from journeys where id='".$journeyId."'");
-            $r = mysqli_fetch_array($q);
-            $qRides = mysqli_query($con,"select * from rides where journeyId = '".$journeyId."'");
-            $rides = array();
-            while ($rRides = mysqli_fetch_array($qRides))
-            {
-                array_push($rides,array("id"=>$rRides["id"],
-                                        "userId"=>$rRides["userId"],
-                                        "journeyId"=>$rRides["journeyId"],
-                                        "meetingLocation"=>$rRides["meetingLocation"],
-                                        "orderStatus"=>$rRides["orderStatus"]));
+            $journey = null;
+            if ($r = mysqli_fetch_array($q)) {
+                $qRides = mysqli_query($con, "select * from rides where journeyId = '" . $journeyId . "'");
+                $rides = array();
+                while ($rRides = mysqli_fetch_array($qRides)) {
+                    array_push($rides, array("id" => $rRides["id"],
+                        "userId" => $rRides["userId"],
+                        "journeyId" => $rRides["journeyId"],
+                        "meetingLocation" => $rRides["meetingLocation"],
+                        "orderStatus" => $rRides["orderStatus"]));
+                }
+                $journey = array("id" => $r["id"],
+                    "startLocation" => $r["startLocation"],
+                    "endLocation" => $r["endLocation"],
+                    "goingDate" => $r["goingDate"],
+                    "seats" => $r["seats"],
+                    "genderPrefer" => $r["genderPrefer"],
+                    "carDescription" => $r["carDescription"],
+                    "rides" => $rides);
             }
-            return json_encode(array("id"=>$r["id"],
-                                    "startLocation"=>$r["startLocation"],
-                                    "endLocation"=>$r["endLocation"],
-                                    "goingDate"=>$r["goingDate"],
-                                    "seats"=>$r["seats"],
-                                    "genderPrefer"=>$r["genderPrefer"],
-                                    "carDescription"=>$r["carDescription"],
-                                    "rides"=>$rides));
+            return json_encode($journey);
         }else
             return json_encode(array("auth"=>"false"));
     }
@@ -136,23 +138,27 @@ class  methods
         if ($user)
         {
             $qRides = mysqli_query($con,"select * from rides where id = '".$rideId."'");
-            $rRides = mysqli_fetch_array($qRides);
-            $qJourney = mysqli_query($con,"select * from journeys where id = '".$rRides["journeyId"]."'");
-            $rJourney = mysqli_fetch_array($qJourney);
-            $journey = array("id"=>$rJourney["id"],
-                            "startLocation"=>$rJourney["startLocation"],
-                            "endLocation"=>$rJourney["endLocation"],
-                            "goingDate"=>$rJourney["goingDate"],
-                            "seats"=>$rJourney["seats"],
-                            "genderPrefer"=>$rJourney["genderPrefer"],
-                            "carDescription"=>$rJourney["carDescription"]);
-            $ride = array("id"=>$rRides["id"],
-                    "userId"=>$rRides["userId"],
-                    "journeyId"=>$rRides["journeyId"],
-                    "meetingLocation"=>$rRides["meetingLocation"],
-                    "orderStatus"=>$rRides["orderStatus"],
-                    "journey"=>$journey);
-
+            $ride = null;
+            if ($rRides = mysqli_fetch_array($qRides)) {
+                $qJourney = mysqli_query($con, "select * from journeys where id = '" . $rRides["journeyId"] . "'");
+                $rJourney = mysqli_fetch_array($qJourney);
+                $journey = null;
+                if ($rJourney) {
+                    $journey = array("id" => $rJourney["id"],
+                        "startLocation" => $rJourney["startLocation"],
+                        "endLocation" => $rJourney["endLocation"],
+                        "goingDate" => $rJourney["goingDate"],
+                        "seats" => $rJourney["seats"],
+                        "genderPrefer" => $rJourney["genderPrefer"],
+                        "carDescription" => $rJourney["carDescription"]);
+                }
+                $ride = array("id" => $rRides["id"],
+                    "userId" => $rRides["userId"],
+                    "journeyId" => $rRides["journeyId"],
+                    "meetingLocation" => $rRides["meetingLocation"],
+                    "orderStatus" => $rRides["orderStatus"],
+                    "journey" => $journey);
+            }
             return json_encode($ride);
         }else
             return json_encode(array("auth"=>"false"));
