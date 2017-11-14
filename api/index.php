@@ -29,4 +29,7 @@ switch ($action)
     case "myJourneys":
         echo methods::getMyJourneys($_POST["username"],$_POST["password"]);
         break;
+    case "getMyRides":
+        echo methods::getMyRides($_POST["username"],$_POST["password"]);
+        break;
 }
