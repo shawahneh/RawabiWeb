@@ -61,4 +61,9 @@ switch ($action)
         //this method return user details with the count of how much journeys the user have and rides
         echo methods::getUserDetails($_POST["username"],$_POST["password"],$_POST["userId"]);
         break;
+    case "setUserDetails":
+        //for this method the user have to provide the current password which is the oldpassword to check if he/she is the same user not some one else
+        //if the user do not need to change his password but he/she want to change other details he/she can leave the newPassword field empty
+        echo methods::setUserDetails($_POST["username"],$_POST["password"],$_POST["fname"],$_POST["lname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["image"],$_POST["phone"],$_POST["newPassword"],$_POST["oldPassword"]);
+        break;
 }

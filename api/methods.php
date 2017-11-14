@@ -86,6 +86,46 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
+    public static function setUserDetails($username,$password,$fname,$lname,$gender,$birthdate,$address,$image,$phone,$newPassword,$oldPassword)
+    {
+        $user = self::checkAuth($username,$oldPassword);
+        global $con;
+        $fname=mysqli_real_escape_string($con,$fname);
+        $lname=mysqli_real_escape_string($con,$lname);
+        $gender=mysqli_real_escape_string($con,$gender);
+        $birthdate=mysqli_real_escape_string($con,$birthdate);
+        $address=mysqli_real_escape_string($con,$address);
+        $image=mysqli_real_escape_string($con,$image);
+        $phone=mysqli_real_escape_string($con,$phone);
+        $newPassword = mysqli_real_escape_string($con,$newPassword);
+        $oldPassword = mysqli_real_escape_string($con,$oldPassword);
+        $status = "fail";
+        if ($user)
+        {
+            if ($newPassword == "")
+            {
+                $newPassword = $oldPassword;
+            }
+            $q = mysqli_query($con,"update users set  password='".$newPassword."',
+                                                            fname='".$fname."',
+                                                            lname='".$lname."',
+                                                            gender='".$gender."',
+                                                            birthdate='".$birthdate."',
+                                                            address='".$address."',
+                                                            image='".$image."',
+                                                            phone='".$phone."' where id = '".$user->id."'");
+            if ($q)
+            {
+                $status = "success";
+            }
+            return json_encode(array("status"=>$status));
+        }else
+            return json_encode(array("status"=>"oldPasswordNotCorrect"));
+
+
+
+
+    }
     public static function getMyJourneys($username,$password){
         $user = self::checkAuth($username,$password);
         global $con;
