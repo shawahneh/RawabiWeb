@@ -97,6 +97,8 @@ class  methods
                                         "meetingLocation"=>$r["meetingLocation"],
                                         "orderStatus"=>$r["orderStatus"]));
             }
-        }
+            return json_encode(array("rides"=>$rides));
+        }else
+            return json_encode(array("auth"=>"false"));
     }
 }
