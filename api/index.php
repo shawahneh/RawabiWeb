@@ -38,4 +38,7 @@ switch ($action)
     case "getRideDetails":
         echo methods::getRideDetails($_POST["username"],$_POST["password"],$_POST["rideId"]);
         break;
+    case "setRideOnJourney":
+        echo  methods::setRideOnJourney($_POST["username"],$_POST["password"],$_POST["journeyId"],$_POST["meetingLocation"]);
+        break;
 }

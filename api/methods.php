@@ -163,4 +163,35 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
+    public static function setRideOnJourney($username,$password,$journeyId,$meetingLocation){
+
+        $user = self::checkAuth($username,$password);
+        global $con;
+        $journeyId = mysqli_real_escape_string($con,$journeyId);
+        $meetingLocation = mysqli_real_escape_string($con,$meetingLocation);
+        if ($user)
+        {
+            $q = mysqli_query($con,"select COUNT(r.id) as jnum,(select seats from journeys where journeys.id = '".$journeyId."') as seats from journeys j JOIN rides r on j.id = r.journeyId where j.id = '".$journeyId."' and r.orderStatus = 1");
+            $status = "fail";
+            if ($r = mysqli_fetch_array($q))
+            {
+                if ($r["jnum"]<$r["seats"])
+                {
+                    $qInsert = mysqli_query($con,"insert into rides set userId='".$user->id."',
+                                                                              journeyId='".$journeyId."',
+                                                                              meetingLocation='".$meetingLocation."',
+                                                                              orderStatus = 0");
+                    if ($qInsert)
+                    {
+                        $status = "success";
+                    }
+                }else
+                    $status = "noAvailableSeats";
+            }
+
+
+            return json_encode(array("status"=>$status));
+        }else
+            return json_encode(array("auth"=>"false"));
+    }
 }
