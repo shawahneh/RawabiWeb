@@ -129,4 +129,22 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
+    public static function getRideDetails($username,$password,$rideId)
+    {
+        $user = self::checkAuth($username,$password);
+        global $con;
+        if ($user)
+        {
+            $qRides = mysqli_query($con,"select * from rides where id = '".$rideId."'");
+            $rRides = mysqli_fetch_array($qRides);
+            $ride = array("id"=>$rRides["id"],
+                    "userId"=>$rRides["userId"],
+                    "journeyId"=>$rRides["journeyId"],
+                    "meetingLocation"=>$rRides["meetingLocation"],
+                    "orderStatus"=>$rRides["orderStatus"]);
+
+            return json_encode($ride);
+        }else
+            return json_encode(array("auth"=>"false"));
+    }
 }
