@@ -70,7 +70,8 @@ class  methods
             while($r=mysqli_fetch_array($q))
             {
                 //startLocation	endLocation	goingDate	seats	genderPrefer	carDescription
-                array_push($journeys,array("startLocation"=>$r["startLocation"],
+                array_push($journeys,array( "id"=>$r["id"],
+                                            "startLocation"=>$r["startLocation"],
                                             "endLocation"=>$r["endLocation"],
                                             "goingDate"=>$r["goingDate"],
                                             "seats"=>$r["seats"],
@@ -81,5 +82,21 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
-
+    public static function getMyRides($username,$password){
+        $user = self::checkAuth($username,$password);
+        global $con;
+        if ($user)
+        {
+            $q = mysqli_query($con,"select * from rides where userId='".$user->id."'");
+            $rides = array();
+            while ($r = mysqli_fetch_array($q))
+            {
+                array_push($rides,array("id"=>$r["id"],
+                                        "userId"=>$r["userId"],
+                                        "journeyId"=>$r["journeyId"],
+                                        "meetingLocation"=>$r["meetingLocation"],
+                                        "orderStatus"=>$r["orderStatus"]));
+            }
+        }
+    }
 }
