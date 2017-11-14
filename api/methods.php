@@ -101,4 +101,32 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
+    public static function getJourneyDetails($username,$password,$journeyId){
+        $user = self::checkAuth($username,$password);
+        global $con;
+        if ($user)
+        {
+            $q = mysqli_query($con,"select * from journeys where id='".$journeyId."'");
+            $r = mysqli_fetch_array($q);
+            $qRides = mysqli_query($con,"select * from rides where journeyId = '".$journeyId."'");
+            $rides = array();
+            while ($rRides = mysqli_fetch_array($qRides))
+            {
+                array_push($rides,array("id"=>$rRides["id"],
+                                        "userId"=>$rRides["userId"],
+                                        "journeyId"=>$rRides["journeyId"],
+                                        "meetingLocation"=>$rRides["meetingLocation"],
+                                        "orderStatus"=>$rRides["orderStatus"]));
+            }
+            return json_encode(array("id"=>$r["id"],
+                                    "startLocation"=>$r["startLocation"],
+                                    "endLocation"=>$r["endLocation"],
+                                    "goingDate"=>$r["goingDate"],
+                                    "seats"=>$r["seats"],
+                                    "genderPrefer"=>$r["genderPrefer"],
+                                    "carDescription"=>$r["carDescription"],
+                                    "rides"=>$rides));
+        }else
+            return json_encode(array("auth"=>"false"));
+    }
 }
