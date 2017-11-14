@@ -137,11 +137,21 @@ class  methods
         {
             $qRides = mysqli_query($con,"select * from rides where id = '".$rideId."'");
             $rRides = mysqli_fetch_array($qRides);
+            $qJourney = mysqli_query($con,"select * from journeys where id = '".$rRides["journeyId"]."'");
+            $rJourney = mysqli_fetch_array($qJourney);
+            $journey = array("id"=>$rJourney["id"],
+                            "startLocation"=>$rJourney["startLocation"],
+                            "endLocation"=>$rJourney["endLocation"],
+                            "goingDate"=>$rJourney["goingDate"],
+                            "seats"=>$rJourney["seats"],
+                            "genderPrefer"=>$rJourney["genderPrefer"],
+                            "carDescription"=>$rJourney["carDescription"]);
             $ride = array("id"=>$rRides["id"],
                     "userId"=>$rRides["userId"],
                     "journeyId"=>$rRides["journeyId"],
                     "meetingLocation"=>$rRides["meetingLocation"],
-                    "orderStatus"=>$rRides["orderStatus"]);
+                    "orderStatus"=>$rRides["orderStatus"],
+                    "journey"=>$journey);
 
             return json_encode($ride);
         }else
