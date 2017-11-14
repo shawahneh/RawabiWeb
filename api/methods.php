@@ -194,4 +194,30 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
+    public static function changeRideStatus($username,$password,$rideId,$orderStatus)
+    {
+        $user = self::checkAuth($username,$password);
+        global $con;
+        $rideId = mysqli_real_escape_string($con,$rideId);
+        $orderStatus = mysqli_real_escape_string($con,$orderStatus);
+        if ($user)
+        {
+            $status = "fail";
+            $q = mysqli_query($con,"select * from journeys j , rides r where j.id = r.journeyId and j.userId='".$user->id."' and r.id = '".$rideId."'");
+            if ($r = mysqli_fetch_array($q))
+            {
+                $qChange = mysqli_query($con,"update rides set orderStatus='".$orderStatus."' where id = '".$rideId."'");
+                if ($qChange)
+                {
+                    $status = "success";
+                }
+            }else
+            {
+                $status = "rideNotRelatedToUser";
+            }
+
+            return json_encode(array("status"=>$status));
+        }else
+            return json_encode(array("auth"=>"false"));
+    }
 }

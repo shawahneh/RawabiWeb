@@ -45,4 +45,16 @@ switch ($action)
         // if something went wrong it will be : fail
         echo  methods::setRideOnJourney($_POST["username"],$_POST["password"],$_POST["journeyId"],$_POST["meetingLocation"]);
         break;
+    case "changeRideStatus":
+        //Output :
+        // if the ride related to journey for this user : success
+        // if the ride is not relater to journey for the user : rideNotRelatedToUser
+        // if something went wrong it will br : fail
+
+        // the status is :
+        // 0 : pending
+        // 1 : accepted
+        // 2 : rejected
+        echo methods::changeRideStatus($_POST["username"],$_POST["password"],$_POST["rideId"],$_POST["orderStatus"]);
+        break;
 }
