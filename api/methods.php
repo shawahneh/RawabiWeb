@@ -60,6 +60,32 @@ class  methods
         }else
             return json_encode(array("registration"=>"failed"));
     }
+    public static function getUserDetails($username,$password,$userId)
+    {
+        $user = self::checkAuth($username,$password);
+        global $con;
+        $userId = mysqli_real_escape_string($con,$userId);
+        if ($user)
+        {
+            $user = null;
+            $q = mysqli_query($con,"SELECT *,(select count(*) from journeys where journeys.userId = u.id) as numJourneys,(select count(*) from rides where rides.userId = u.id) as numRides from users as u where id='".$userId."'");
+            if ($r=mysqli_fetch_array($q)) {
+                $user = array("username"=>$r["username"],
+                                "fname"=>$r["fname"],
+                                "lname"=>$r["lname"],
+                                "gender"=>$r["gender"],
+                                "birthdate"=>$r["birthdate"],
+                                "address"=>$r["address"],
+                                "userType"=>$r["userType"],
+                                "image"=>$r["image"],
+                                "phone"=>$r["phone"],
+                                "numJourneys"=>$r["numJourneys"],
+                                "numRides"=>$r["numRides"]);
+            }
+            return json_encode($user);
+        }else
+            return json_encode(array("auth"=>"false"));
+    }
     public static function getMyJourneys($username,$password){
         $user = self::checkAuth($username,$password);
         global $con;

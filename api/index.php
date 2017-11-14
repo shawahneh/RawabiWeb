@@ -57,4 +57,8 @@ switch ($action)
         // 2 : rejected
         echo methods::changeRideStatus($_POST["username"],$_POST["password"],$_POST["rideId"],$_POST["orderStatus"]);
         break;
+    case "getUserDetails":
+        //this method return user details with the count of how much journeys the user have and rides
+        echo methods::getUserDetails($_POST["username"],$_POST["password"],$_POST["userId"]);
+        break;
 }
