@@ -67,6 +67,8 @@ switch ($action)
         //if the user do not need to change his password but he/she want to change other details he/she can leave the newPassword field empty
         echo methods::setUserDetails($_POST["username"],$_POST["password"],$_POST["fullname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["image"],$_POST["phone"],$_POST["newPassword"],$_POST["oldPassword"]);
         break;
+    case "setNewJourney":
+        echo methods::setNewJourney($_POST["username"],$_POST["password"],$_POST["startLocationX"],$_POST["startLocationY"],$_POST["endLocationX"],$_POST["endLocationY"],$_POST["goingDate"],$_POST["seats"],$_POST["genderPrefer"],$_POST["carDescription"]);
     default:
         echo json_encode(array("auth"=>$_POST));
 }
