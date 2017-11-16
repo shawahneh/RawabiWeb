@@ -66,4 +66,6 @@ switch ($action)
         //if the user do not need to change his password but he/she want to change other details he/she can leave the newPassword field empty
         echo methods::setUserDetails($_POST["username"],$_POST["password"],$_POST["fname"],$_POST["lname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["image"],$_POST["phone"],$_POST["newPassword"],$_POST["oldPassword"]);
         break;
+    default:
+        echo json_encode(array("auth"=>$_POST));
 }
