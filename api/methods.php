@@ -143,6 +143,35 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
+    public static function setNewJourney($username,$password,$startLocationX,$startLocationY,$endLocationX,$endLocationY,$goingDate,$seats,$genderPrefer,$carDescription){
+        $user = self::checkAuth($username,$password);
+        global $con;
+        $startLocationX = mysqli_real_escape_string($con,$startLocationX);
+        $startLocationY = mysqli_real_escape_string($con,$startLocationY);
+        $endLocationX = mysqli_real_escape_string($con,$endLocationX);
+        $endLocationY = mysqli_real_escape_string($con,$endLocationY);
+        $goingDate = mysqli_real_escape_string($con,$goingDate);
+        $seats = mysqli_real_escape_string($con,$seats);
+        $genderPrefer = mysqli_real_escape_string($con,$genderPrefer);
+        $carDescription = mysqli_real_escape_string($con,$carDescription);
+
+        if ($user)
+        {
+            $q = mysqli_query($con,"insert into journeys set startLocationX='".$startLocationX."',
+                                                                   startLocationY='".$startLocationY."',
+                                                                   endLocationX='".$endLocationX."',
+                                                                   endLocationY='".$endLocationY."',
+                                                                   goingDate='".$goingDate."',
+                                                                   seats='".$seats."',
+                                                                   genderPrefe='".$genderPrefer."',
+                                                                   carDescription='".$carDescription."'");
+            if ($q)
+            return json_encode(array("status"=>"success"));
+            else
+                return json_encode(array("status"=>"fail"));
+        }else
+            return json_encode(array("auth"=>"false"));
+    }
     public static function getMyRides($username,$password){
         $user = self::checkAuth($username,$password);
         global $con;
@@ -224,12 +253,13 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
-    public static function setRideOnJourney($username,$password,$journeyId,$meetingLocation){
+    public static function setRideOnJourney($username,$password,$journeyId,$meetingLocationX,$meetingLocationY){
 
         $user = self::checkAuth($username,$password);
         global $con;
         $journeyId = mysqli_real_escape_string($con,$journeyId);
-        $meetingLocation = mysqli_real_escape_string($con,$meetingLocation);
+        $meetingLocationX = mysqli_real_escape_string($con,$meetingLocationX);
+        $meetingLocationY = mysqli_real_escape_string($con,$meetingLocationY);
         if ($user)
         {
             $q = mysqli_query($con,"select COUNT(r.id) as jnum,(select seats from journeys where journeys.id = '".$journeyId."') as seats from journeys j JOIN rides r on j.id = r.journeyId where j.id = '".$journeyId."' and r.orderStatus = 1");
@@ -240,7 +270,8 @@ class  methods
                 {
                     $qInsert = mysqli_query($con,"insert into rides set userId='".$user->id."',
                                                                               journeyId='".$journeyId."',
-                                                                              meetingLocation='".$meetingLocation."',
+                                                                              meetingLocationX='".$meetingLocationX."',
+                                                                              meetingLocationY='".$meetingLocationY."',
                                                                               orderStatus = 0");
                     if ($qInsert)
                     {
