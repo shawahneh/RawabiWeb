@@ -13,12 +13,11 @@ if ($ind!="yes")
 class User
 {
     public $id,$username,$fname,$lname,$gender,$birthdate,$address,$userType,$image,$phone;
-    function __construct($id,$username,$fname,$lname,$gender,$birthdate,$address,$userType,$image,$phone)
+    function __construct($id,$username,$fullname,$gender,$birthdate,$address,$userType,$image,$phone)
     {
         $this->id = $id;
         $this->username = $username;
-        $this->fname = $fname;
-        $this->lname = $lname;
+        $this->fullname = $fullname;
         $this->gender = $gender;
         $this->birthdate = $birthdate;
         $this->address = $address;
@@ -34,7 +33,7 @@ class User
         $r = mysqli_fetch_array($q);
         if (isset($r))
         {
-            $user = new User($r["id"],$username,$r["fname"],$r["lname"],$r["gender"],$r["birthdate"],$r["address"],$r["userType"],$r["image"],$r["phone"]);
+            $user = new User($r["id"],$username,$r["fullname"],$r["gender"],$r["birthdate"],$r["address"],$r["userType"],$r["image"],$r["phone"]);
             return $user;
         }else
             return null;

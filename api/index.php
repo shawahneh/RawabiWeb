@@ -25,7 +25,7 @@ switch ($action)
         break;
     case "userRegister":
         //$username,$password,$fname,$lname,$gender,$birthdate,$address,$userType,$image,$phone
-        echo methods::userRegister($_POST["username"],$_POST["password"],$_POST["fname"],$_POST["lname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["userType"],$_POST["image"],$_POST["phone"]);
+        echo methods::userRegister($_POST["username"],$_POST["password"],$_POST["fullname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["userType"],$_POST["image"],$_POST["phone"]);
         break;
     case "myJourneys":
         echo methods::getMyJourneys($_POST["username"],$_POST["password"]);
@@ -65,7 +65,7 @@ switch ($action)
     case "setUserDetails":
         //for this method the user have to provide the current password which is the oldpassword to check if he/she is the same user not some one else
         //if the user do not need to change his password but he/she want to change other details he/she can leave the newPassword field empty
-        echo methods::setUserDetails($_POST["username"],$_POST["password"],$_POST["fname"],$_POST["lname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["image"],$_POST["phone"],$_POST["newPassword"],$_POST["oldPassword"]);
+        echo methods::setUserDetails($_POST["username"],$_POST["password"],$_POST["fullname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["image"],$_POST["phone"],$_POST["newPassword"],$_POST["oldPassword"]);
         break;
     default:
         echo json_encode(array("auth"=>$_POST));

@@ -30,13 +30,12 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
-    public static function userRegister($username,$password,$fname,$lname,$gender,$birthdate,$address,$userType,$image,$phone)
+    public static function userRegister($username,$password,$fullname,$gender,$birthdate,$address,$userType,$image,$phone)
     {
         global $con;
         $username=mysqli_real_escape_string($con,$username);
         $password=mysqli_real_escape_string($con,$password);
-        $fname=mysqli_real_escape_string($con,$fname);
-        $lname=mysqli_real_escape_string($con,$lname);
+        $fullname=mysqli_real_escape_string($con,$fullname);
         $gender=mysqli_real_escape_string($con,$gender);
         $birthdate=mysqli_real_escape_string($con,$birthdate);
         $address=mysqli_real_escape_string($con,$address);
@@ -46,8 +45,7 @@ class  methods
 
         $q = mysqli_query($con,"insert into users set username='".$username."',
                                                             password='".$password."',
-                                                            fname='".$fname."',
-                                                            lname='".$lname."',
+                                                            fullname='".$fullname."',
                                                             gender='".$gender."',
                                                             birthdate='".$birthdate."',
                                                             address='".$address."',
@@ -71,8 +69,7 @@ class  methods
             $q = mysqli_query($con,"SELECT *,(select count(*) from journeys where journeys.userId = u.id) as numJourneys,(select count(*) from rides where rides.userId = u.id) as numRides from users as u where id='".$userId."'");
             if ($r=mysqli_fetch_array($q)) {
                 $user = array("username"=>$r["username"],
-                                "fname"=>$r["fname"],
-                                "lname"=>$r["lname"],
+                                "fullname"=>$r["fullname"],
                                 "gender"=>$r["gender"],
                                 "birthdate"=>$r["birthdate"],
                                 "address"=>$r["address"],
@@ -86,12 +83,11 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
-    public static function setUserDetails($username,$password,$fname,$lname,$gender,$birthdate,$address,$image,$phone,$newPassword,$oldPassword)
+    public static function setUserDetails($username,$password,$fullname,$gender,$birthdate,$address,$image,$phone,$newPassword,$oldPassword)
     {
         $user = self::checkAuth($username,$oldPassword);
         global $con;
-        $fname=mysqli_real_escape_string($con,$fname);
-        $lname=mysqli_real_escape_string($con,$lname);
+        $fullname=mysqli_real_escape_string($con,$fullname);
         $gender=mysqli_real_escape_string($con,$gender);
         $birthdate=mysqli_real_escape_string($con,$birthdate);
         $address=mysqli_real_escape_string($con,$address);
@@ -107,8 +103,7 @@ class  methods
                 $newPassword = $oldPassword;
             }
             $q = mysqli_query($con,"update users set  password='".$newPassword."',
-                                                            fname='".$fname."',
-                                                            lname='".$lname."',
+                                                            fullname='".$fullname."',
                                                             gender='".$gender."',
                                                             birthdate='".$birthdate."',
                                                             address='".$address."',
