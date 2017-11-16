@@ -8,7 +8,7 @@
 // headers for not caching the results
 
 $ind = "yes";
-include ("../conf.php");
+include("conf.php");
 include ("methods.php");
 $action=@$_POST["action"];
 header('Cache-Control: no-cache, must-revalidate');

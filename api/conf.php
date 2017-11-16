@@ -13,6 +13,7 @@ if ($ind!="yes")
 }
 $con = mysqli_connect("localhost","root","","techcamp");
 
+
 if(mysqli_connect_errno())
 {
     print_f("Connection Failed: %s\n",mysqli_connect_error());
