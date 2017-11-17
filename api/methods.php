@@ -121,12 +121,15 @@ class  methods
 
 
     }
-    public static function getMyJourneys($username,$password){
+    public static function getJourneys($username,$password,$userId,$start,$num){
         $user = self::checkAuth($username,$password);
         global $con;
+        $userId = mysqli_real_escape_string($con,$userId);
+        $start = mysqli_real_escape_string($con,$start);
+        $num = mysqli_real_escape_string($con,$num);
         if ($user)
         {
-            $q = mysqli_query($con,"select * from journeys where userId='".$user->id."'");
+            $q = mysqli_query($con,"select * from journeys where userId='".$userId."' limit "+$start+","+$num);
             $journeys = array();
             while($r=mysqli_fetch_array($q))
             {
@@ -155,15 +158,17 @@ class  methods
         $genderPrefer = mysqli_real_escape_string($con,$genderPrefer);
         $carDescription = mysqli_real_escape_string($con,$carDescription);
 
+
         if ($user)
         {
-            $q = mysqli_query($con,"insert into journeys set startLocationX='".$startLocationX."',
+            $q = mysqli_query($con,"insert into journeys set userId='".$user->id."',
+                                                                   startLocationX='".$startLocationX."',
                                                                    startLocationY='".$startLocationY."',
                                                                    endLocationX='".$endLocationX."',
                                                                    endLocationY='".$endLocationY."',
                                                                    goingDate='".$goingDate."',
                                                                    seats='".$seats."',
-                                                                   genderPrefe='".$genderPrefer."',
+                                                                   genderPrefer='".$genderPrefer."',
                                                                    carDescription='".$carDescription."'");
             if ($q)
             return json_encode(array("status"=>"success"));
@@ -172,12 +177,12 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
-    public static function getMyRides($username,$password){
+    public static function getRides($username,$password,$userId,$start,$num){
         $user = self::checkAuth($username,$password);
         global $con;
         if ($user)
         {
-            $q = mysqli_query($con,"select * from rides where userId='".$user->id."'");
+            $q = mysqli_query($con,"select * from rides where userId='".$userId."' limit "+$start+","+$num);
             $rides = array();
             while ($r = mysqli_fetch_array($q))
             {

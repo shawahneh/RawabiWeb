@@ -12,7 +12,7 @@ if ($ind!="yes")
 }
 class User
 {
-    public $id,$username,$fname,$lname,$gender,$birthdate,$address,$userType,$image,$phone;
+    public $id,$username,$gender,$birthdate,$address,$userType,$image,$phone;
     function __construct($id,$username,$fullname,$gender,$birthdate,$address,$userType,$image,$phone)
     {
         $this->id = $id;

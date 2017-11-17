@@ -69,6 +69,7 @@ switch ($action)
         break;
     case "setNewJourney":
         echo methods::setNewJourney($_POST["username"],$_POST["password"],$_POST["startLocationX"],$_POST["startLocationY"],$_POST["endLocationX"],$_POST["endLocationY"],$_POST["goingDate"],$_POST["seats"],$_POST["genderPrefer"],$_POST["carDescription"]);
+        break;
     default:
         echo json_encode(array("auth"=>$_POST));
 }
