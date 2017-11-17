@@ -68,6 +68,8 @@ switch ($action)
         echo methods::setUserDetails($_POST["username"],$_POST["password"],$_POST["fullname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["image"],$_POST["phone"],$_POST["newPassword"],$_POST["oldPassword"]);
         break;
     case "setNewJourney":
+        //on success return id
+        //on fail return -1
         echo methods::setNewJourney($_POST["username"],$_POST["password"],$_POST["startLocationX"],$_POST["startLocationY"],$_POST["endLocationX"],$_POST["endLocationY"],$_POST["goingDate"],$_POST["seats"],$_POST["genderPrefer"],$_POST["carDescription"]);
         break;
     default:

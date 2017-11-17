@@ -171,11 +171,11 @@ class  methods
                                                                    genderPrefer='".$genderPrefer."',
                                                                    carDescription='".$carDescription."'");
             if ($q)
-            return json_encode(array("status"=>"success"));
+            return json_encode(array("status"=>"".mysqli_insert_id()));
             else
-                return json_encode(array("status"=>"fail"));
+                return json_encode(array("status"=>"-1"));
         }else
-            return json_encode(array("auth"=>"false"));
+            return json_encode(array("auth"=>"-1"));
     }
     public static function getRides($username,$password,$userId,$start,$num){
         $user = self::checkAuth($username,$password);
