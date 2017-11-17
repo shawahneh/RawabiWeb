@@ -171,7 +171,7 @@ class  methods
                                                                    genderPrefer='".$genderPrefer."',
                                                                    carDescription='".$carDescription."'");
             if ($q)
-            return json_encode(array("status"=>"".mysqli_insert_id()));
+            return json_encode(array("status"=>"".mysqli_insert_id($con)));
             else
                 return json_encode(array("status"=>"-1"));
         }else
