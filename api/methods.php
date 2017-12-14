@@ -60,15 +60,20 @@ class  methods
     }
     public static function getUserDetails($username,$password,$userId)
     {
-        $user = self::checkAuth($username,$password);
+        $userCheck = self::checkAuth($username,$password);
         global $con;
         $userId = mysqli_real_escape_string($con,$userId);
-        if ($user)
+        if ($userCheck)
         {
+            if ($userId<=0)
+            {
+                $userId = $userCheck->id;
+            }
             $user = null;
             $q = mysqli_query($con,"SELECT *,(select count(*) from journeys where journeys.userId = u.id) as numJourneys,(select count(*) from rides where rides.userId = u.id) as numRides from users as u where id='".$userId."'");
             if ($r=mysqli_fetch_array($q)) {
-                $user = array("username"=>$r["username"],
+                $user = array(  "id"=>$r["id"],
+                                "username"=>$r["username"],
                                 "fullname"=>$r["fullname"],
                                 "gender"=>$r["gender"],
                                 "birthdate"=>$r["birthdate"],
@@ -79,7 +84,12 @@ class  methods
                                 "numJourneys"=>$r["numJourneys"],
                                 "numRides"=>$r["numRides"]);
             }
-            return json_encode($user);
+            if ($user!=null) {
+                return json_encode($user);
+            }else
+            {
+                return json_encode(null);
+            }
         }else
             return json_encode(array("auth"=>"false"));
     }
@@ -124,23 +134,44 @@ class  methods
     public static function getJourneys($username,$password,$userId,$start,$num){
         $user = self::checkAuth($username,$password);
         global $con;
+        if ($userId<=0)
+        {
+            $userId = $user->id;
+        }
         $userId = mysqli_real_escape_string($con,$userId);
         $start = mysqli_real_escape_string($con,$start);
         $num = mysqli_real_escape_string($con,$num);
         if ($user)
         {
+            $qU = mysqli_query($con,"SELECT * from users as u where id='".$userId."'");
+            $userDetails = null;
+            if ($r=mysqli_fetch_array($qU)) {
+                $userDetails = array(  "id"=>$r["id"],
+                                        "username"=>$r["username"],
+                                        "fullname"=>$r["fullname"],
+                                        "gender"=>$r["gender"],
+                                        "birthdate"=>$r["birthdate"],
+                                        "address"=>$r["address"],
+                                        "userType"=>$r["userType"],
+                                        "image"=>$r["image"],
+                                        "phone"=>$r["phone"]);
+            }
+
             $q = mysqli_query($con,"select * from journeys where userId='".$userId."' limit "+$start+","+$num);
             $journeys = array();
             while($r=mysqli_fetch_array($q))
             {
                 //startLocation	endLocation	goingDate	seats	genderPrefer	carDescription
                 array_push($journeys,array( "id"=>$r["id"],
-                                            "startLocation"=>$r["startLocation"],
-                                            "endLocation"=>$r["endLocation"],
+                                            "startLocationX"=>$r["startLocationX"],
+                                            "startLocationY"=>$r["startLocationY"],
+                                            "endLocationX"=>$r["endLocationX"],
+                                            "endLocationY"=>$r["endLocationY"],
                                             "goingDate"=>$r["goingDate"],
                                             "seats"=>$r["seats"],
                                             "genderPrefer"=>$r["genderPrefer"],
-                                            "carDescription"=>$r["carDescription"]));
+                                            "carDescription"=>$r["carDescription"],
+                                            "user"=>$userDetails));
             }
             return json_encode(array("journeys"=>$journeys));
         }else
@@ -180,15 +211,58 @@ class  methods
     public static function getRides($username,$password,$userId,$start,$num){
         $user = self::checkAuth($username,$password);
         global $con;
+
+        if ($userId<=0)
+        {
+            $userId = $user->id;
+        }
+        $userId = mysqli_real_escape_string($con,$userId);
+        $start = mysqli_real_escape_string($con,$start);
+        $num = mysqli_real_escape_string($con,$num);
         if ($user)
         {
-            $q = mysqli_query($con,"select * from rides where userId='".$userId."' limit "+$start+","+$num);
+            $qU = mysqli_query($con,"SELECT * from users as u where id='".$userId."'");
+            $userDetails = null;
+            if ($r=mysqli_fetch_array($qU)) {
+                $userDetails = array(  "id"=>$r["id"],
+                    "username"=>$r["username"],
+                    "fullname"=>$r["fullname"],
+                    "gender"=>$r["gender"],
+                    "birthdate"=>$r["birthdate"],
+                    "address"=>$r["address"],
+                    "userType"=>$r["userType"],
+                    "image"=>$r["image"],
+                    "phone"=>$r["phone"]);
+            }
+            $q = mysqli_query($con,"select *,j.userId as journeyUserId from rides r,journeys j where r.userId='".$userId."' and r.journeyId=j.id limit "+$start+","+$num);
             $rides = array();
             while ($r = mysqli_fetch_array($q))
             {
+                $qJU = mysqli_query($con,"SELECT * from users as u where id='".$r["journeyUserId"]."'");
+                $journeyUserDetails = null;
+                if ($Jr=mysqli_fetch_array($qJU)) {
+                    $journeyUserDetails = array(  "id"=>$Jr["id"],
+                        "username"=>$Jr["username"],
+                        "fullname"=>$Jr["fullname"],
+                        "gender"=>$Jr["gender"],
+                        "birthdate"=>$Jr["birthdate"],
+                        "address"=>$Jr["address"],
+                        "userType"=>$Jr["userType"],
+                        "image"=>$Jr["image"],
+                        "phone"=>$Jr["phone"]);
+                }
                 array_push($rides,array("id"=>$r["id"],
-                                        "userId"=>$r["userId"],
-                                        "journeyId"=>$r["journeyId"],
+                                        "user"=>$userDetails,
+                                        "journeyId"=>array( "id"=>$r["id"],
+                                            "startLocationX"=>$r["startLocationX"],
+                                            "startLocationY"=>$r["startLocationY"],
+                                            "endLocationX"=>$r["endLocationX"],
+                                            "endLocationY"=>$r["endLocationY"],
+                                            "goingDate"=>$r["goingDate"],
+                                            "seats"=>$r["seats"],
+                                            "genderPrefer"=>$r["genderPrefer"],
+                                            "carDescription"=>$r["carDescription"],
+                                            "user"=>$journeyUserDetails),
                                         "meetingLocation"=>$r["meetingLocation"],
                                         "orderStatus"=>$r["orderStatus"]));
             }
