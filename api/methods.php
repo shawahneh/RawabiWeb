@@ -156,8 +156,7 @@ class  methods
                                         "image"=>$r["image"],
                                         "phone"=>$r["phone"]);
             }
-
-            $q = mysqli_query($con,"select * from journeys where userId='".$userId."' limit "+$start+","+$num);
+            $q = mysqli_query($con,"select * from journeys where userId='".$userId."' limit ".$start.",".$num);
             $journeys = array();
             while($r=mysqli_fetch_array($q))
             {
@@ -234,7 +233,7 @@ class  methods
                     "image"=>$r["image"],
                     "phone"=>$r["phone"]);
             }
-            $q = mysqli_query($con,"select *,j.userId as journeyUserId from rides r,journeys j where r.userId='".$userId."' and r.journeyId=j.id limit "+$start+","+$num);
+            $q = mysqli_query($con,"select *,j.userId as journeyUserId from rides r,journeys j where r.userId='".$userId."' and r.journeyId=j.id limit ".$start.",".$num);
             $rides = array();
             while ($r = mysqli_fetch_array($q))
             {
@@ -253,7 +252,7 @@ class  methods
                 }
                 array_push($rides,array("id"=>$r["id"],
                                         "user"=>$userDetails,
-                                        "journeyId"=>array( "id"=>$r["id"],
+                                        "journey"=>array( "id"=>$r["id"],
                                             "startLocationX"=>$r["startLocationX"],
                                             "startLocationY"=>$r["startLocationY"],
                                             "endLocationX"=>$r["endLocationX"],
@@ -263,7 +262,8 @@ class  methods
                                             "genderPrefer"=>$r["genderPrefer"],
                                             "carDescription"=>$r["carDescription"],
                                             "user"=>$journeyUserDetails),
-                                        "meetingLocation"=>$r["meetingLocation"],
+                                        "meetingLocationX"=>$r["meetingLocationX"],
+                                        "meetingLocationY"=>$r["meetingLocationY"],
                                         "orderStatus"=>$r["orderStatus"]));
             }
             return json_encode(array("rides"=>$rides));
@@ -390,5 +390,45 @@ class  methods
             return json_encode(array("status"=>$status));
         }else
             return json_encode(array("auth"=>"false"));
+    }
+    public static function filterJourneys($username,$password,$startPointX,$startPointY,$endPointX,$endPointY,$goingDate,$sortBy){
+
+    }
+    public static function getNumberOfJourneys($username,$password){
+
+    }
+    public static function changeJourneyStatusAndGetRiders($username,$password,$journyid,$status){
+
+    }
+    public static function getCustomJourney($username,$password,$journyid){
+
+    }
+
+    public static function getRidersOfJourney($username,$password){
+
+    }
+    public static function getStatusOfRide($username,$password,$rideid){
+
+    }
+    public static function getEventAtDate($date){
+
+    }
+    public static function getEvents(){
+
+    }
+    public static function getAnnouns(){
+
+    }
+    public static function getJobs(){
+
+    }
+    public static function getTransportation(){
+
+    }
+    public static function getWeather(){
+
+    }
+    public static function getMedia(){
+
     }
 }

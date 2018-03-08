@@ -9,8 +9,8 @@
 
 $ind = "yes";
 include("conf.php");
-include ("methods.php");
-$action=@$_POST["action"];
+include("methods.php");
+$action = @$_POST["action"];
 header('Cache-Control: no-cache, must-revalidate');
 header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
@@ -18,35 +18,38 @@ header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 // headers to tell that result is JSON
 header('Content-type: application/json');
 
-switch ($action)
-{
+switch ($action) {
+    //done
     case"userAuth":
-        echo methods::userAuth($_POST["username"],$_POST["password"]);
+        echo methods::userAuth($_POST["username"], $_POST["password"]);
         break;
+    //done
     case "userRegister":
         //$username,$password,$fname,$lname,$gender,$birthdate,$address,$userType,$image,$phone
-        echo methods::userRegister($_POST["username"],$_POST["password"],$_POST["fullname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["userType"],$_POST["image"],$_POST["phone"]);
+        echo methods::userRegister($_POST["username"], $_POST["password"], $_POST["fullname"], $_POST["gender"], $_POST["birthdate"], $_POST["address"], $_POST["userType"], $_POST["image"], $_POST["phone"]);
         break;
-    case "myJourneys":
+    //done
+    case "getJourneys":
         //if userId <=0 then it will set the userId for the logged in user
-        echo methods::getJourneys($_POST["username"],$_POST["password"],$_POST["userId"],$_POST["start"],$_POST["num"]);
+        echo methods::getJourneys($_POST["username"], $_POST["password"], $_POST["userId"], $_POST["start"], $_POST["num"]);
         break;
-    case "getMyRides":
+    //done
+    case "getRides":
         //if userId <=0 then it will set the userId for the logged in user
-        echo methods::getRides($_POST["username"],$_POST["password"],$_POST["userId"],$_POST["start"],$_POST["num"]);
+        echo methods::getRides($_POST["username"], $_POST["password"], $_POST["userId"], $_POST["start"], $_POST["num"]);
         break;
     case "getJourneyDetails":
-        echo methods::getJourneyDetails($_POST["username"],$_POST["password"],$_POST["journeyId"]);
+        echo methods::getJourneyDetails($_POST["username"], $_POST["password"], $_POST["journeyId"]);
         break;
     case "getRideDetails":
-        echo methods::getRideDetails($_POST["username"],$_POST["password"],$_POST["rideId"]);
+        echo methods::getRideDetails($_POST["username"], $_POST["password"], $_POST["rideId"]);
         break;
     case "setRideOnJourney":
         // this method get the journeyId and meetingLocation on this method i checked if there is available seats
         // if there is a seats available the output will be :  success
         // if there is no seats available for the selected journey : noAvailableSeats
         // if something went wrong it will be : fail
-        echo  methods::setRideOnJourney($_POST["username"],$_POST["password"],$_POST["journeyId"],$_POST["meetingLocation"]);
+        echo methods::setRideOnJourney($_POST["username"], $_POST["password"], $_POST["journeyId"], $_POST["meetingLocation"]);
         break;
     case "changeRideStatus":
         //Output :
@@ -58,22 +61,24 @@ switch ($action)
         // 0 : pending
         // 1 : accepted
         // 2 : rejected
-        echo methods::changeRideStatus($_POST["username"],$_POST["password"],$_POST["rideId"],$_POST["orderStatus"]);
+        echo methods::changeRideStatus($_POST["username"], $_POST["password"], $_POST["rideId"], $_POST["orderStatus"]);
         break;
+    //done
     case "getUserDetails":
         //this method return user details with the count of how much journeys the user have and rides
-        echo methods::getUserDetails($_POST["username"],$_POST["password"],$_POST["userId"]);
+        echo methods::getUserDetails($_POST["username"], $_POST["password"], $_POST["userId"]);
         break;
     case "setUserDetails":
         //for this method the user have to provide the current password which is the oldpassword to check if he/she is the same user not some one else
         //if the user do not need to change his password but he/she want to change other details he/she can leave the newPassword field empty
-        echo methods::setUserDetails($_POST["username"],$_POST["password"],$_POST["fullname"],$_POST["gender"],$_POST["birthdate"],$_POST["address"],$_POST["image"],$_POST["phone"],$_POST["newPassword"],$_POST["oldPassword"]);
+        echo methods::setUserDetails($_POST["username"], $_POST["password"], $_POST["fullname"], $_POST["gender"], $_POST["birthdate"], $_POST["address"], $_POST["image"], $_POST["phone"], $_POST["newPassword"], $_POST["oldPassword"]);
         break;
+    //done
     case "setNewJourney":
         //on success return id
         //on fail return -1
-        echo methods::setNewJourney($_POST["username"],$_POST["password"],$_POST["startLocationX"],$_POST["startLocationY"],$_POST["endLocationX"],$_POST["endLocationY"],$_POST["goingDate"],$_POST["seats"],$_POST["genderPrefer"],$_POST["carDescription"]);
+        echo methods::setNewJourney($_POST["username"], $_POST["password"], $_POST["startLocationX"], $_POST["startLocationY"], $_POST["endLocationX"], $_POST["endLocationY"], $_POST["goingDate"], $_POST["seats"], $_POST["genderPrefer"], $_POST["carDescription"]);
         break;
     default:
-        echo json_encode(array("auth"=>$_POST));
+        echo json_encode(array("auth" => $_POST));
 }
