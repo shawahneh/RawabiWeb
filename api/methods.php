@@ -284,9 +284,11 @@ class  methods
                     array_push($rides, array("id" => $rRides["id"],
                         "userId" => $rRides["userId"],
                         "journeyId" => $rRides["journeyId"],
-                        "meetingLocation" => $rRides["meetingLocation"],
+                        "meetingLocationX" => $rRides["meetingLocationX"],
+                        "meetingLocationY" => $rRides["meetingLocationY"],
                         "orderStatus" => $rRides["orderStatus"]));
                 }
+                //need to get the user details and put it in the array
                 $journey = array("id" => $r["id"],
                     "startLocation" => $r["startLocation"],
                     "endLocation" => $r["endLocation"],
@@ -392,41 +394,228 @@ class  methods
             return json_encode(array("auth"=>"false"));
     }
     public static function filterJourneys($username,$password,$startPointX,$startPointY,$endPointX,$endPointY,$goingDate,$sortBy){
+        $user = self::checkAuth($username,$password);
+        global $con;
 
-    }
-    public static function getNumberOfJourneys($username,$password){
+        $startPointX = mysqli_real_escape_string($con,$startPointX);
+        $startPointY = mysqli_real_escape_string($con,$startPointY);
+        $endPointX = mysqli_real_escape_string($con,$endPointX);
+        $endPointY = mysqli_real_escape_string($con,$endPointY);
+        $goingDate = mysqli_real_escape_string($con,$goingDate);
 
+        if ($user)
+        {
+            $q = mysqli_query($con,"select *,u.id uid,j.id jid from journeys j , users u where j.userId=u.id");
+
+            $journeys = array();
+            while($r=mysqli_fetch_array($q))
+            {
+                $userDetails = array(  "id"=>$r["uid"],
+                    "username"=>$r["username"],
+                    "fullname"=>$r["fullname"],
+                    "gender"=>$r["gender"],
+                    "birthdate"=>$r["birthdate"],
+                    "address"=>$r["address"],
+                    "userType"=>$r["userType"],
+                    "image"=>$r["image"],
+                    "phone"=>$r["phone"]);
+                //startLocation	endLocation	goingDate	seats	genderPrefer	carDescription
+                array_push($journeys,array( "id"=>$r["jid"],
+                    "startLocationX"=>$r["startLocationX"],
+                    "startLocationY"=>$r["startLocationY"],
+                    "endLocationX"=>$r["endLocationX"],
+                    "endLocationY"=>$r["endLocationY"],
+                    "goingDate"=>$r["goingDate"],
+                    "seats"=>$r["seats"],
+                    "genderPrefer"=>$r["genderPrefer"],
+                    "carDescription"=>$r["carDescription"],
+                    "user"=>$userDetails));
+            }
+            return json_encode(array("journeys"=>$journeys));
+        }else
+            return json_encode(array("auth"=>"false"));
     }
     public static function changeJourneyStatusAndGetRiders($username,$password,$journyid,$status){
 
+        $user = self::checkAuth($username,$password);
+        global $con;
+        $journyid = mysqli_real_escape_string($con,$journyid);
+        $status = mysqli_real_escape_string($con,$status);
+        if ($user)
+        {
+            $q = mysqli_query($con,"select * from journeys where userId=".intval($user->id)." and id=".$journyid);
+
+            $status = "fail";
+            if ($r = mysqli_fetch_array($q))
+            {
+                $proc = mysqli_query($con,"update journeys set status=".intval($status)." where id=".$journyid);
+                if ($proc){
+                    $status =  "success";
+                }
+            }
+
+
+            return json_encode(array("status"=>$status));
+        }else
+            return json_encode(array("auth"=>"false"));
     }
-    public static function getCustomJourney($username,$password,$journyid){
+    /*public static function getCustomJourney($username,$password,$journyid){
 
-    }
+    }*/
+    //does not return the journey details
+    public static function getRidersOfJourney($username,$password,$journeyid){
+        $user = self::checkAuth($username,$password);
+        global $con;
+        $journeyid = mysqli_real_escape_string($con,$journeyid);
+        if ($user)
+        {
+            $q = mysqli_query($con,"select * from journeys where userId=".intval($user->id)." and id=".$journeyid);
+            $rides = array();
+            if ($r = mysqli_fetch_array($q))
+            {
 
-    public static function getRidersOfJourney($username,$password){
+                //does not return the journey details
+                $ride = mysqli_query($con,"select *,r.id as rid from rides r, user u where r.userId=u.id");
+                while ($row = mysqli_fetch_array($ride))
+                {
+                    $userDetails = array(  "id"=>$row["userId"],
+                        "username"=>$row["username"],
+                        "fullname"=>$row["fullname"],
+                        "gender"=>$row["gender"],
+                        "birthdate"=>$row["birthdate"],
+                        "address"=>$row["address"],
+                        "userType"=>$row["userType"],
+                        "image"=>$row["image"],
+                        "phone"=>$row["phone"]);
 
+
+
+                    array_push($rides,array("id"=>$row["rid"],
+                                            "user"=>$userDetails,
+                                            "journeyid"=>$row["journeyId"],
+                                            "meetingLocationX"=>$row["meetingLocationX"],
+                                            "meetingLocationy"=>$row["meetingLocationY"],
+                                            "status"=>$row["orderStatus"]));
+                }
+            }
+
+
+            return json_encode(array("rides"=>$rides));
+        }else
+            return json_encode(array("auth"=>"false"));
     }
     public static function getStatusOfRide($username,$password,$rideid){
+        $user = self::checkAuth($username,$password);
+        global $con;
+        $rideid = mysqli_real_escape_string($con,$rideid);
+        if ($user)
+        {
+            $q = mysqli_query($con,"select orderStatus from rides where userId=".intval($user->id)." and id=".$rideid);
+            $status = 0;
+            if ($r = mysqli_fetch_array($q))
+            {
+                $status = $r["orderStatus"];
+            }
 
+
+            return json_encode(array("rideStatus"=>$status));
+        }else
+            return json_encode(array("auth"=>"false"));
+    }
+    public static function getNumberOfJourneys(){
+        global $con;
+
+        $q = mysqli_query($con,"select count(*) as num journeys where goingDate > '".date("Y-m-d H:i:s")."'");
+
+        if($r=mysqli_fetch_array($q)) {
+            return json_encode(array("number" => $r["num"]));
+        }else
+        {
+            return json_encode(array("error"=>"can't count journyes"));
+        }
     }
     public static function getEventAtDate($date){
-
+        global $con;
+        $time = strtotime($date);
+        $theDate = date("Y-m-d",$time);
+        $afterOneDay = date("Y-m-d",strtotime('+1 day', $theDate));
+        $q = mysqli_query($con,"SELECT * FROM `events` where startDateTime = '".$theDate." 00:00:00' or ( startDateTime > '".$theDate."' and startDateTime < '".$afterOneDay."' )");
+        $event = array();
+        while ($r=mysqli_fetch_array($q))
+        {
+            array_push($event,array("id"=>$r["id"],
+                                    "title"=>$r["title"],
+                                    "description"=>$r["description"],
+                                    "startDateTime"=>$r["startDateTime"],
+                                    "imageUrl"=>$r["imageUrl"]));
+        }
+        return json_encode(array("events"=>$event));
     }
     public static function getEvents(){
-
+        global $con;
+        $date = date("Y-m-d");
+        $q = mysqli_query($con,"SELECT * FROM `events` where startDateTime > '".$date."' or startDateTime='".$date." 00:00:00'");
+        $event = array();
+        while ($r=mysqli_fetch_array($q))
+        {
+            array_push($event,array("id"=>$r["id"],
+                "title"=>$r["title"],
+                "description"=>$r["description"],
+                "startDateTime"=>$r["startDateTime"],
+                "imageUrl"=>$r["imageUrl"]));
+        }
+        return json_encode(array("events"=>$event));
     }
     public static function getAnnouns(){
-
+        global $con;
+        $date = date("Y-m-d");
+        $q = mysqli_query($con,"SELECT * FROM `announcement` where startDate > '".$date."' or startDate='".$date."'");
+        $announs = array();
+        while ($r=mysqli_fetch_array($q))
+        {
+            array_push($announs,array("id"=>$r["id"],
+                "name"=>$r["name"],
+                "description"=>$r["description"],
+                "startDate"=>$r["startDate"],
+                "endDate"=>$r["endDate"],
+                "imageUrl"=>$r["imageUrl"]));
+        }
+        return json_encode(array("announcement"=>$announs));
     }
     public static function getJobs(){
-
+        global $con;
+        $date = date("Y-m-d");
+        $q = mysqli_query($con,"SELECT * FROM `jobs` where endDate < '".$date."' or endtDate='".$date."'");
+        $jobs = array();
+        while ($r=mysqli_fetch_array($q))
+        {
+            array_push($announs,array("id"=>$r["id"],
+                "jobTitle"=>$r["jobTitle"],
+                "description"=>$r["description"],
+                "endDate"=>$r["endDate"]));
+        }
+        return json_encode(array("jobs"=>$jobs));
     }
     public static function getTransportation(){
+        global $con;
 
-    }
-    public static function getWeather(){
+        $q = mysqli_query($con,"SELECT * FROM `transportation`");
+        $fromRawabi = array(); // type of 0
+        $fromRamallah = array(); // type of 1
+        $catch = null;
+        while ($r=mysqli_fetch_array($q))
+        {
+            if ($r["type"]==0)
+            {
+                $catch = &$fromRawabi;
+            }else
+                $catch = &$fromRamallah;
 
+            array_push($catch,array("id"=>$r["id"],
+                "type"=>$r["type"],
+                "time"=>$r["timegoind"]));
+        }
+        return json_encode(array("fromRawabi"=>$fromRawabi,"fromRamallah"=>$fromRamallah));
     }
     public static function getMedia(){
 
