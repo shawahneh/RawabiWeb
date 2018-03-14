@@ -65,7 +65,7 @@ switch ($action) {
         // if there is a seats available the output will be :  success
         // if there is no seats available for the selected journey : noAvailableSeats
         // if something went wrong it will be : fail
-        echo methods::setRideOnJourney($_POST["username"], $_POST["password"], $_POST["journeyId"], $_POST["meetingLocation"]);
+        echo methods::setRideOnJourney($_POST["username"], $_POST["password"], $_POST["journeyId"],$_POST["meetingLocationX"], $_POST["meetingLocationY"]);
         break;
     case "changeRideStatus":
         //Output :
