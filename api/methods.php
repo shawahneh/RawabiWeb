@@ -275,27 +275,47 @@ class  methods
         global $con;
         if ($user)
         {
-            $q = mysqli_query($con,"select * from journeys where id='".$journeyId."'");
+
+            $q = mysqli_query($con,"select *,j.id as jid,u.id as uid from journeys j,users u where j.userId=u.id and j.id='".$journeyId."'");
             $journey = null;
             if ($r = mysqli_fetch_array($q)) {
-                $qRides = mysqli_query($con, "select * from rides where journeyId = '" . $journeyId . "'");
+                $qRides = mysqli_query($con, "select *,r.id as rid,u.id as uid from rides r,users u where r.userId = u.id and r.journeyId = '" . $journeyId . "'");
                 $rides = array();
                 while ($rRides = mysqli_fetch_array($qRides)) {
-                    array_push($rides, array("id" => $rRides["id"],
-                        "userId" => $rRides["userId"],
+                    $userDetails = array(  "id"=>$rRides["uid"],
+                        "username"=>$rRides["username"],
+                        "fullname"=>$rRides["fullname"],
+                        "gender"=>$rRides["gender"],
+                        "birthdate"=>$rRides["birthdate"],
+                        "address"=>$rRides["address"],
+                        "userType"=>$rRides["userType"],
+                        "image"=>$rRides["image"],
+                        "phone"=>$rRides["phone"]);
+                    array_push($rides, array("id" => $rRides["rid"],
+                        "user" => $userDetails,
                         "journeyId" => $rRides["journeyId"],
                         "meetingLocationX" => $rRides["meetingLocationX"],
                         "meetingLocationY" => $rRides["meetingLocationY"],
                         "orderStatus" => $rRides["orderStatus"]));
                 }
                 //need to get the user details and put it in the array
-                $journey = array("id" => $r["id"],
+                $userDetails = array(  "id"=>$r["uid"],
+                    "username"=>$r["username"],
+                    "fullname"=>$r["fullname"],
+                    "gender"=>$r["gender"],
+                    "birthdate"=>$r["birthdate"],
+                    "address"=>$r["address"],
+                    "userType"=>$r["userType"],
+                    "image"=>$r["image"],
+                    "phone"=>$r["phone"]);
+                $journey = array("id" => $r["jid"],
                     "startLocation" => $r["startLocation"],
                     "endLocation" => $r["endLocation"],
                     "goingDate" => $r["goingDate"],
                     "seats" => $r["seats"],
                     "genderPrefer" => $r["genderPrefer"],
                     "carDescription" => $r["carDescription"],
+                    "user"=>$userDetails,
                     "rides" => $rides);
             }
             return json_encode($journey);
@@ -308,26 +328,45 @@ class  methods
         global $con;
         if ($user)
         {
-            $qRides = mysqli_query($con,"select * from rides where id = '".$rideId."'");
+            $qRides = mysqli_query($con,"select *,r.id as rid,u.id as uid from rides r,users u where r.userId = u.id and r.id = '".$rideId."'");
             $ride = null;
             if ($rRides = mysqli_fetch_array($qRides)) {
-                $qJourney = mysqli_query($con, "select * from journeys where id = '" . $rRides["journeyId"] . "'");
+                $qJourney = mysqli_query($con, "select *,j.id as jid,u.id as uid from journeys j,users u where j.userId=u.id and j.id = '" . $rRides["journeyId"] . "'");
                 $rJourney = mysqli_fetch_array($qJourney);
                 $journey = null;
                 if ($rJourney) {
-                    $journey = array("id" => $rJourney["id"],
+                    $userDetails = array(  "id"=>$rJourney["uid"],
+                        "username"=>$rJourney["username"],
+                        "fullname"=>$rJourney["fullname"],
+                        "gender"=>$rJourney["gender"],
+                        "birthdate"=>$rJourney["birthdate"],
+                        "address"=>$rJourney["address"],
+                        "userType"=>$rJourney["userType"],
+                        "image"=>$rJourney["image"],
+                        "phone"=>$rJourney["phone"]);
+                    $journey = array("id" => $rJourney["jid"],
                         "startLocation" => $rJourney["startLocation"],
                         "endLocation" => $rJourney["endLocation"],
                         "goingDate" => $rJourney["goingDate"],
                         "seats" => $rJourney["seats"],
                         "genderPrefer" => $rJourney["genderPrefer"],
-                        "carDescription" => $rJourney["carDescription"]);
+                        "carDescription" => $rJourney["carDescription"],
+                        "user"=>$userDetails);
                 }
-                $ride = array("id" => $rRides["id"],
-                    "userId" => $rRides["userId"],
-                    "journeyId" => $rRides["journeyId"],
-                    "meetingLocation" => $rRides["meetingLocation"],
+                $userDetails = array(  "id"=>$rRides["uid"],
+                    "username"=>$rRides["username"],
+                    "fullname"=>$rRides["fullname"],
+                    "gender"=>$rRides["gender"],
+                    "birthdate"=>$rRides["birthdate"],
+                    "address"=>$rRides["address"],
+                    "userType"=>$rRides["userType"],
+                    "image"=>$rRides["image"],
+                    "phone"=>$rRides["phone"]);
+                $ride = array("id" => $rRides["rid"],
+                    "meetingLocationX" => $rRides["meetingLocationX"],
+                    "meetingLocationY" => $rRides["meetingLocationY"],
                     "orderStatus" => $rRides["orderStatus"],
+                    "user" => $userDetails,
                     "journey" => $journey);
             }
             return json_encode($ride);
@@ -494,7 +533,7 @@ class  methods
                                             "user"=>$userDetails,
                                             "journeyid"=>$row["journeyId"],
                                             "meetingLocationX"=>$row["meetingLocationX"],
-                                            "meetingLocationy"=>$row["meetingLocationY"],
+                                            "meetingLocationY"=>$row["meetingLocationY"],
                                             "status"=>$row["orderStatus"]));
                 }
             }
