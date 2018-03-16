@@ -384,6 +384,7 @@ class  methods
         {
             $q = mysqli_query($con,"select COUNT(r.id) as jnum,(select seats from journeys where journeys.id = '".$journeyId."') as seats from journeys j JOIN rides r on j.id = r.journeyId where j.id = '".$journeyId."' and r.orderStatus = 1");
             $status = "fail";
+            $rideid = -1;
             if ($r = mysqli_fetch_array($q))
             {
                 if ($r["jnum"]<$r["seats"])
@@ -396,13 +397,15 @@ class  methods
                     if ($qInsert)
                     {
                         $status = "success";
+                        $rideid = mysqli_insert_id($con);
                     }
                 }else
                     $status = "noAvailableSeats";
             }
 
 
-            return json_encode(array("status"=>$status));
+            return json_encode(array("status"=>$status,
+                                     "rideId"=>$rideid));
         }else
             return json_encode(array("auth"=>"false"));
     }
