@@ -445,7 +445,7 @@ class  methods
         $endPointY = mysqli_real_escape_string($con,$endPointY);
         $goingDate = mysqli_real_escape_string($con,$goingDate);
 
-        $radius = 0.0138044;
+        $radius = 0.0208044;//0.0138044;
         $radiusX2 = $radius * $radius;
         if ($user)
         {
