@@ -450,10 +450,14 @@ class  methods
         if ($user)
         {
             //$q = mysqli_query($con,"select *,u.id uid,j.id jid from journeys j , users u where j.userId=u.id");
-            $q = mysqli_query($con,"SELECT *,u.id uid,j.id jid FROM journeys j , users u WHERE j.userId=u.id AND goingDate >= '".$goingDate."' AND
+            /*$q = mysqli_query($con,"SELECT *,u.id uid,j.id jid FROM journeys j , users u WHERE j.userId=u.id AND goingDate >= '".$goingDate."' AND
 POWER( (POWER( (startLocationX-".$startPointX.") ,2) + POWER( (startLocationY-".$startPointY.") ,2)) ,2) < ".$radiusX2."
 AND
-POWER( (POWER( (endLocationX-".$endPointX.") ,2) + POWER( (endLocationY-".$endPointY.") ,2)) ,2) < ".$radiusX2);
+POWER( (POWER( (endLocationX-".$endPointX.") ,2) + POWER( (endLocationY-".$endPointY.") ,2)) ,2) < ".$radiusX2);*/
+            $q = mysqli_query($con,"SELECT *,u.id uid,j.id jid FROM journeys j , users u WHERE j.userId=u.id AND goingDate >= '".$goingDate."' AND
+(POWER( (startLocationX-".$startPointX.") ,2) + POWER( (startLocationY-".$startPointY.") ,2))  < ".$radiusX2."
+AND
+(POWER( (endLocationX-".$endPointX.") ,2) + POWER( (endLocationY-".$endPointY.") ,2)) < ".$radiusX2);
             $journeys = array();
             while($r=mysqli_fetch_array($q))
             {
