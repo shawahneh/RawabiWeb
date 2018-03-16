@@ -445,10 +445,15 @@ class  methods
         $endPointY = mysqli_real_escape_string($con,$endPointY);
         $goingDate = mysqli_real_escape_string($con,$goingDate);
 
+        $radius = 0.0138044;
+        $radiusX2 = $radius * $radius;
         if ($user)
         {
-            $q = mysqli_query($con,"select *,u.id uid,j.id jid from journeys j , users u where j.userId=u.id");
-
+            //$q = mysqli_query($con,"select *,u.id uid,j.id jid from journeys j , users u where j.userId=u.id");
+            $q = mysqli_query($con,"SELECT *,u.id uid,j.id jid FROM journeys j , users u WHERE j.userId=u.id AND goingDate >= '".$goingDate."' AND
+POWER( (POWER( (startLocationX-".$startPointX.") ,2) + POWER( (startLocationY-".$startPointY.") ,2)) ,2) < ".$radiusX2."
+AND
+POWER( (POWER( (endLocationX-".$endPointX.") ,2) + POWER( (endLocationY-".$endPointY.") ,2)) ,2) < ".$radiusX2);
             $journeys = array();
             while($r=mysqli_fetch_array($q))
             {
