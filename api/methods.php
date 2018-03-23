@@ -315,6 +315,7 @@ class  methods
                     "seats" => $r["seats"],
                     "genderPrefer" => $r["genderPrefer"],
                     "carDescription" => $r["carDescription"],
+                    "status" => $r["status"],
                     "user"=>$userDetails,
                     "rides" => $rides);
             }
