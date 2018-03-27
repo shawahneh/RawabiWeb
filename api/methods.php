@@ -156,7 +156,7 @@ class  methods
                                         "image"=>$r["image"],
                                         "phone"=>$r["phone"]);
             }
-            $q = mysqli_query($con,"select * from journeys where userId='".$userId."' limit ".$start.",".$num);
+            $q = mysqli_query($con,"select * from journeys where userId='".$userId."' order by goingDate desc limit ".$start.",".$num);
             $journeys = array();
             while($r=mysqli_fetch_array($q))
             {
@@ -235,7 +235,7 @@ class  methods
                     "image"=>$r["image"],
                     "phone"=>$r["phone"]);
             }
-            $q = mysqli_query($con,"select *,j.userId as journeyUserId from rides r,journeys j where r.userId='".$userId."' and r.journeyId=j.id limit ".$start.",".$num);
+            $q = mysqli_query($con,"select *,j.userId as journeyUserId from rides r,journeys j where r.userId='".$userId."' and r.journeyId=j.id ORDER BY j.goingDate desc limit ".$start.",".$num);
             $rides = array();
             while ($r = mysqli_fetch_array($q))
             {
@@ -611,7 +611,7 @@ AND
     public static function getEvents(){
         global $con;
         $date = date("Y-m-d");
-        $q = mysqli_query($con,"SELECT * FROM `events` where startDateTime > '".$date."' or startDateTime='".$date." 00:00:00'");
+        $q = mysqli_query($con,"SELECT * FROM `events` where startDateTime > '".$date."' or startDateTime='".$date." 00:00:00' ORDER BY startDateTime");
         $event = array();
         while ($r=mysqli_fetch_array($q))
         {
@@ -626,7 +626,7 @@ AND
     public static function getAnnouns(){
         global $con;
         $date = date("Y-m-d");
-        $q = mysqli_query($con,"SELECT * FROM `announcement` where startDate > '".$date."' or startDate='".$date."'");
+        $q = mysqli_query($con,"SELECT * FROM `announcement` where startDate > '".$date."' or startDate='".$date."'  ORDER BY startDate DESC");
         $announs = array();
         while ($r=mysqli_fetch_array($q))
         {
@@ -642,7 +642,7 @@ AND
     public static function getJobs(){
         global $con;
         $date = date("Y-m-d");
-        $q = mysqli_query($con,"SELECT * FROM `jobs` where endDate > '".$date."' or endDate='".$date."'");
+        $q = mysqli_query($con,"SELECT * FROM `jobs` where endDate > '".$date."' or endDate='".$date."' order by endDate desc");
         $jobs = array();
         while ($r=mysqli_fetch_array($q))
         {
@@ -656,7 +656,7 @@ AND
     public static function getTransportation(){
         global $con;
 
-        $q = mysqli_query($con,"SELECT * FROM `transportation`");
+        $q = mysqli_query($con,"SELECT * FROM `transportation` order by timegoing");
         $fromRawabi = array(); // type of 0
         $fromRamallah = array(); // type of 1
         $catch = null;
