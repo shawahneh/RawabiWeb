@@ -170,6 +170,7 @@ class  methods
                                             "seats"=>$r["seats"],
                                             "genderPrefer"=>$r["genderPrefer"],
                                             "carDescription"=>$r["carDescription"],
+                                            "status"=>$r["status"],
                                             "user"=>$userDetails));
             }
             return json_encode(array("journeys"=>$journeys));
@@ -199,6 +200,7 @@ class  methods
                                                                    goingDate='".$goingDate."',
                                                                    seats='".$seats."',
                                                                    genderPrefer='".$genderPrefer."',
+                                                                   status='0',
                                                                    carDescription='".$carDescription."'");
             if ($q)
             return json_encode(array("status"=>"".mysqli_insert_id($con)));
@@ -261,6 +263,7 @@ class  methods
                                             "seats"=>$r["seats"],
                                             "genderPrefer"=>$r["genderPrefer"],
                                             "carDescription"=>$r["carDescription"],
+                                            "status"=>$r["status"],
                                             "user"=>$journeyUserDetails),
                                         "meetingLocationX"=>$r["meetingLocationX"],
                                         "meetingLocationY"=>$r["meetingLocationY"],
@@ -315,6 +318,7 @@ class  methods
                     "seats" => $r["seats"],
                     "genderPrefer" => $r["genderPrefer"],
                     "carDescription" => $r["carDescription"],
+                    "status"=> $r["status"],
                     "user"=>$userDetails,
                     "rides" => $rides);
             }
@@ -351,6 +355,7 @@ class  methods
                         "seats" => $rJourney["seats"],
                         "genderPrefer" => $rJourney["genderPrefer"],
                         "carDescription" => $rJourney["carDescription"],
+                        "status"=>$rJourney["status"],
                         "user"=>$userDetails);
                 }
                 $userDetails = array(  "id"=>$rRides["uid"],
@@ -480,6 +485,7 @@ AND
                     "seats"=>$r["seats"],
                     "genderPrefer"=>$r["genderPrefer"],
                     "carDescription"=>$r["carDescription"],
+                    "status"=>$r["status"],
                     "user"=>$userDetails));
             }
             return json_encode(array("journeys"=>$journeys));
@@ -640,7 +646,7 @@ AND
         $jobs = array();
         while ($r=mysqli_fetch_array($q))
         {
-            array_push($announs,array("id"=>$r["id"],
+            array_push($jobs,array("id"=>$r["id"],
                 "jobTitle"=>$r["jobTitle"],
                 "description"=>$r["description"],
                 "endDate"=>$r["endDate"]));
