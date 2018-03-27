@@ -642,7 +642,7 @@ AND
     public static function getJobs(){
         global $con;
         $date = date("Y-m-d");
-        $q = mysqli_query($con,"SELECT * FROM `jobs` where endDate < '".$date."' or endtDate='".$date."'");
+        $q = mysqli_query($con,"SELECT * FROM `jobs` where endDate > '".$date."' or endDate='".$date."'");
         $jobs = array();
         while ($r=mysqli_fetch_array($q))
         {
