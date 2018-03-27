@@ -30,7 +30,7 @@ class  methods
         }else
             return json_encode(array("auth"=>"false"));
     }
-    public static function userRegister($username,$password,$fullname,$gender,$birthdate,$address,$userType,$image,$phone)
+    public static function userRegister($username,$password,$fullname,$gender,$birthdate,$address,$image,$phone)
     {
         global $con;
         $username=mysqli_real_escape_string($con,$username);
@@ -39,17 +39,17 @@ class  methods
         $gender=mysqli_real_escape_string($con,$gender);
         $birthdate=mysqli_real_escape_string($con,$birthdate);
         $address=mysqli_real_escape_string($con,$address);
-        $userType=mysqli_real_escape_string($con,$userType);
+        //$userType=mysqli_real_escape_string($con,$userType);
         $image=mysqli_real_escape_string($con,$image);
         $phone=mysqli_real_escape_string($con,$phone);
 
         $q = mysqli_query($con,"insert into users set username='".$username."',
                                                             password='".$password."',
                                                             fullname='".$fullname."',
-                                                            gender='".$gender."',
+                                                            gender='".intval($gender)."',
                                                             birthdate='".$birthdate."',
                                                             address='".$address."',
-                                                            userType='".$userType."',
+                                                            userType='1',
                                                             image='".$image."',
                                                             phone='".$phone."'");
         if ($q)

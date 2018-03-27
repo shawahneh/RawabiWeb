@@ -25,8 +25,12 @@ switch ($action) {
         break;
     //done
     case "userRegister":
+        /* for the gender :
+         * for male set the value =  0
+         * for female set the value = 1
+         */
         //$username,$password,$fname,$lname,$gender,$birthdate,$address,$userType,$image,$phone
-        echo methods::userRegister($_POST["username"], $_POST["password"], $_POST["fullname"], $_POST["gender"], $_POST["birthdate"], $_POST["address"], $_POST["userType"], $_POST["image"], $_POST["phone"]);
+        echo methods::userRegister($_POST["username"], $_POST["password"], $_POST["fullname"], $_POST["gender"], $_POST["birthdate"], $_POST["address"], $_POST["image"], $_POST["phone"]);
         break;
     //done
     case "getUserDetails":
