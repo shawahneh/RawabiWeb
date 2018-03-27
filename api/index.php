@@ -82,7 +82,7 @@ switch ($action) {
         echo methods::filterJourneys($_POST["username"], $_POST["password"],$_POST["startPointX"],$_POST["startPointY"],$_POST["endPointX"],$_POST["endPointY"],$_POST["goingDate"],$_POST["sortBy"]);
         break;
     case "changeJourneyStatusAndGetRiders":
-        echo methods::changeJourneyStatusAndGetRiders($_POST["username"],$_POST["password"],$_POST["journyid"],$_POST["status"]);
+        echo methods::changeJourneyStatusAndGetRiders($_POST["username"],$_POST["password"],$_POST["journeyid"],$_POST["status"]);
         break;
     case "getRidersOfJourney":
         echo methods::getRidersOfJourney($_POST["username"],$_POST["password"],$_POST["journeyid"]);
