@@ -670,7 +670,7 @@ AND
 
             array_push($catch,array("id"=>$r["id"],
                 "type"=>$r["type"],
-                "time"=>$r["timegoind"]));
+                "time"=>date("g:i a", strtotime($r["timegoing"]))));
         }
         return json_encode(array("fromRawabi"=>$fromRawabi,"fromRamallah"=>$fromRamallah));
     }
